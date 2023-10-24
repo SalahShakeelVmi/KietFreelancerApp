@@ -81,6 +81,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        Session::flash('message', 'Project Deleted');
     }
 }

@@ -9,6 +9,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectCategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,14 +24,16 @@ use App\Http\Controllers\ProjectController;
 
 Route::get('/',[CustomerController::class,'index'])->name('home');
 
-Route::get('/dashboard',[DashboardController::class,'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
 Route::post('/projects/store', [ProjectController::class, 'store'])->name('projects.store');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+Route::middleware(['admin_auth'])->group(function () {
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
     Route::put('/users/update-status/{id}', [UserController::class, 'updateStatus'])->name('users.update-status');
     Route::get('/users/create',[UserController::class,"create"])->name('users.create');
@@ -46,7 +50,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::put('/projects/update-status/{id}', [ProjectController::class, 'updateStatus'])->name('projects.update-status');
     Route::get('/projects/search', [ProjectController::class, 'search'])->name('projects.search');
+    Route::delete('/projects/destroy/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
+    Route::get('/project-users', [ProjectUserController::class, 'index'])->name('project-users.index');
+    Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
+    Route::get('/project-users/create/{id}', [ProjectUserController::class, 'create'])->name('project-users.create');
 
 });
 

@@ -14,7 +14,6 @@ class Project extends Model
     public function projectcategory(){
         return $this->belongsTo(ProjectCategory::class, 'projectcategoryid');
     }
-    
 
     protected $fillable = [
         'name',

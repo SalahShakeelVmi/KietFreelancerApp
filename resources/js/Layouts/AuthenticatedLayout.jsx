@@ -22,7 +22,7 @@ export default function Authenticated({ user, header, children }) {
 
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-white dark:bg-gray-900 ">
 
             <ToastContainer />
 
@@ -35,8 +35,9 @@ export default function Authenticated({ user, header, children }) {
                                     <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800" />
                                 </Link>
                             </div>
-
+                            {user.role === "admin"  &&
                             <div className="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                           
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Dashboard
                                 </NavLink>
@@ -52,7 +53,13 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('projects.index')} active={route().current('projects.index') || route().current('projects.search')}>
                                     Projects
                                 </NavLink>
+
+                                <NavLink href={route('project-users.index')} active={route().current('project-users.index') || route().current('project-users.search') || route().current('project-users.create')}>
+                                    Assign Projects
+                                </NavLink>
+                             
                             </div>
+                             }
                         </div>
 
                         <div className="hidden sm:flex sm:items-center sm:ml-6">

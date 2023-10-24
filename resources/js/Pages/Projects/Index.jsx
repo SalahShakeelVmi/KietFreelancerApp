@@ -4,11 +4,34 @@ import React, { useState, useEffect } from 'react'
 import { Link, Head, router } from '@inertiajs/react'
 import Authenticated from '@/Layouts/AuthenticatedLayout'
 import RoundedHoverButton from '@/Components/RoundedHoverButton'
+import moment from 'moment';
+import Dropdown from '@/Components/Dropdown'
+import Modal from '@/Components/Modal'
+import DangerButton from '@/Components/DangerButton';
+import PrimaryButton from '@/Components/PrimaryButton';
 
 const Index = ({ auth, projects }) => {
 
     const [searchValue, setSearchValue] = useState('');
     const [typingTimeout, setTypingTimeout] = useState(null);
+    const {dropdownOpen, setDropdownOpen} = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+    const [readItem, setReadItem] = useState(null);
+    const [readModel, setReadModel] = useState(false);
+
+    const handleOpenReadModel = (item) => {
+        setReadItem(item);
+        openReadModel();
+    };
+
+    const openReadModel = () => {
+        setReadModel(true);
+    }
+    const closeReadModel = () => {
+        setReadModel(false);
+    }
+
 
     const updateStatus = (id,status) => {
      
@@ -42,9 +65,95 @@ const Index = ({ auth, projects }) => {
         );
       };
 
+      
+  const toggleDropdown = () => {
+    setDropdownOpen((prevOpen) => !prevOpen);
+};
+
+
+
+const handleOpenModal = (project) => {
+    setReadModel(false);
+    setItemToDelete(project);
+     setIsModalOpen(true);
+  };
+  
+  const handleCloseModal = () => {
+     setIsModalOpen(false);
+  };
+  
+   const handleDeleteProject = () => {  
+          router.delete(route('projects.destroy',itemToDelete),{
+              preserveScroll: true
+          })   
+          handleCloseModal();
+      };
+
   return (
     <Authenticated user={auth.user}>
         <Head title="Projects"/>
+
+
+        <Modal show={isModalOpen} onClose={handleCloseModal}>
+                <div className="p-4">
+                    <h2>Confirmation</h2>
+                    <p>Are you sure you want to delete this project?</p>
+                    <div className="space-x-4 mt-4">
+                        <DangerButton onClick={handleDeleteProject}>Confirm</DangerButton>
+                        <PrimaryButton onClick={handleCloseModal}>Close</PrimaryButton>
+                    </div>
+                </div>
+            </Modal>
+
+
+
+            {/* Reading Model */}
+            {readModel && (
+
+                    <div id="readProductModal" tabindex="-1" aria-hidden="true" class="overflow-y-auto fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full flex">
+                    <div class="relative p-4 w-full max-w-xl h-full md:h-auto">
+                    
+                        <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
+                            
+                                <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                                    <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                                        <h3 class="font-semibold ">
+                                         Project Title: {readItem.project_title}
+                                        </h3>
+                                        <h2 class="font-semibold ">
+                                         Project Category: {readItem.projectcategory.category_name}
+                                        </h2>
+                                        <p class="font-bold">
+                                            Rs: {readItem.price}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <button type="button" onClick={closeReadModel} class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 inline-flex dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="readProductModal">
+                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                            <span class="sr-only">Close modal</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <dl>
+                                    <dt class="mb-2 font-semibold leading-none text-gray-900 dark:text-white">Details</dt>
+                                    <dd class="mb-4 font-light text-gray-500 sm:mb-5 dark:text-gray-400">{ readItem.description }</dd>
+                           
+                                </dl>
+                                <div class="flex justify-between items-center">
+
+                                    <DangerButton onClick={(e)=>{e.preventDefault(); handleOpenModal(readItem) }}> <svg aria-hidden="true" class="w-5 h-5 mr-1.5 -ml-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg> Delete</DangerButton>
+                                               
+                                   
+                                </div>
+                        </div>
+                    </div>
+                    </div>
+                
+            )}
+
+           
+
+            {/* End Reading Model */}
         
 
         <section class="p-3 sm:p-5">
@@ -65,15 +174,9 @@ const Index = ({ auth, projects }) => {
                         </div>
                    
                 </div>
-                <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                <RoundedHoverButton  svg_icon={<svg xmlns="http://www.w3.org/2000/svg" stroke="currentColor"  x="0px" y="0px" width="15" height="15" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
-                     <path d="M 4.9902344 3.9902344 A 1.0001 1.0001 0 0 0 4.2929688 5.7070312 L 10.585938 12 L 4.2929688 18.292969 A 1.0001 1.0001 0 1 0 5.7070312 19.707031 L 12 13.414062 L 18.292969 19.707031 A 1.0001 1.0001 0 1 0 19.707031 18.292969 L 13.414062 12 L 19.707031 5.7070312 A 1.0001 1.0001 0 0 0 18.980469 3.9902344 A 1.0001 1.0001 0 0 0 18.292969 4.2929688 L 12 10.585938 L 5.7070312 4.2929688 A 1.0001 1.0001 0 0 0 4.9902344 3.9902344 z"></path>
-                     </svg>
-                 }/>
-                   
-                </div>
+               
             </div>
-            <div class="overflow-x-auto">
+          
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -114,34 +217,44 @@ const Index = ({ auth, projects }) => {
                                 </label>
     
                                 </td>
-                                <td class="px-4 py-3">{project.created_at}</td>
+                                <td class="px-4 py-3">{ moment(new Date(project.created_at)).fromNow() }</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
-                                    <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                        </svg>
-                                    </button>
-                                    <div id="apple-imac-27-dropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                            <li>
-                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                            </li>
-                                            <li>
-                                                <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                            </li>
-                                        </ul>
-                                        <div class="py-1">
-                                            <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                        </div>
-                                    </div>
-                                </td>
+                                    <Dropdown>
+                                    <Dropdown.Trigger>
+                                        <button
+                                            id="apple-imac-27-dropdown-button"                                            
+                                            className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                            type="button"
+                                            onClick={toggleDropdown}
+                                        >
+                                            <svg
+                                                className="w-5 h-5"
+                                                aria-hidden="true"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            </svg>
+                                        </button>
+                                    </Dropdown.Trigger>
+                                    <Dropdown.Content>
+                                        
+                                        <Dropdown.Link onClick={(e)=>{e.preventDefault(); handleOpenReadModel(project) }}  >View</Dropdown.Link>
+                                        <Dropdown.Link onClick={(e) => { e.preventDefault(); handleOpenModal(project) } } >Delete</Dropdown.Link>
+                                        
+                                       
+                                        
+                                    </Dropdown.Content>
+                                </Dropdown>
+                            </td>
                             </tr>
 
                         ))}
                       
                     </tbody>
                 </table>
-            </div>
+           
             <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   
