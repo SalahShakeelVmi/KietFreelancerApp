@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateProjectUserRequest;
 use Inertia\Inertia;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\Project;
 class ProjectUserController extends Controller
 {
     /**
@@ -32,17 +33,28 @@ class ProjectUserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($id)
     {
-        return Inertia::render('AssignProjects/Create');
+        $user = User::find($id);
+        $projects = Project::with('projectcategory')->where('status',1)->latest()->get();
+        return Inertia::render('AssignProjects/Create',[
+            'projects' => $projects,
+            'user' => $user,
+            'position' => $user->position
+        ]);
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProjectUserRequest $request)
+    public function store(Request $request)
     {
-        //
+        ProjectUser::create([
+            'user_id' =>  $request->input('user_id'),
+            'project_id' => $request->input('project_id')
+        ]);
+        return response()->json(['message' => 'added successfully']);
     }
 
     /**

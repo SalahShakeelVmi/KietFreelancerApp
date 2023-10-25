@@ -55,6 +55,7 @@ Route::middleware(['admin_auth'])->group(function () {
     Route::get('/project-users', [ProjectUserController::class, 'index'])->name('project-users.index');
     Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
     Route::get('/project-users/create/{id}', [ProjectUserController::class, 'create'])->name('project-users.create');
+    
 
 });
 

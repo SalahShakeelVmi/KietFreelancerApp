@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Head, router } from '@inertiajs/react';
 import Authenticated from '@/Layouts/AuthenticatedLayout';
-import Kanban from '@/Components/Kanban';
 import RoundedHoverButton from '@/Components/RoundedHoverButton';
 
 const Index = ({auth,users}) => {
