@@ -36,11 +36,18 @@ class ProjectUserController extends Controller
     public function create($id)
     {
         $user = User::find($id);
-        $projects = Project::with('projectcategory')->where('status',1)->latest()->get();
+        $user_projects = ProjectUser::where('user_id', $id)->get();
+
+        $user_project_ids = ProjectUser::pluck('project_id');
+
+        $projects = Project::with('projectcategory')->where('status',1)->whereNotIn('id',$user_project_ids)->latest()->get(); 
+        $all_projects = Project::with('projectcategory')->where('status',1)->latest()->get();    
+        
         return Inertia::render('AssignProjects/Create',[
             'projects' => $projects,
             'user' => $user,
-            'position' => $user->position
+            'user_projects' => $user_projects,
+            'all_projects' => $all_projects
         ]);
     }
 
@@ -52,7 +59,8 @@ class ProjectUserController extends Controller
     {
         ProjectUser::create([
             'user_id' =>  $request->input('user_id'),
-            'project_id' => $request->input('project_id')
+            'project_id' => $request->input('project_id'),
+            'position' => $request->input('position'),
         ]);
         return response()->json(['message' => 'added successfully']);
     }
@@ -76,7 +84,7 @@ class ProjectUserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProjectUserRequest $request, ProjectUser $projectUser)
+    public function update(Request $request, ProjectUser $projectUser)
     {
         //
     }
@@ -84,8 +92,11 @@ class ProjectUserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(ProjectUser $projectUser)
+    public function destroy(ProjectUser $projectUser,$id)
     {
-        //
+       
+            $projectUser->where('project_id',$id)->delete();
+            return response()->json(['message' => 'deleted successfully']);
+       
     }
 }

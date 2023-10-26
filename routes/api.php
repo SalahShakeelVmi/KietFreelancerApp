@@ -19,3 +19,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::put('/project-users/store', [ProjectUserController::class, 'store'])->name('project-users.store');
+Route::delete('/project-users/delete/{id}', [ProjectUserController::class, 'destroy'])->name('project-users.delete');

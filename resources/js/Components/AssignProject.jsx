@@ -40,64 +40,92 @@ const Title = styled("span")(() => ({
 }));
 
 
-const AssignProject = ({getProjects,user}) => {
-  const [columns, setColumns] = useState(
-    {
+const AssignProject = ({userProjects,getProjects,user,allProjects}) => {
+// Filter project IDs from UserProjects
+const userProjectIds = userProjects.map(item => item.project_id);
 
-      [uuidv4()]: {
-        title: 'Projects',
-        items: getProjects
-        .filter(getProjects => getProjects.status === 'Projects')
-        .map((item, index) => ({ ...item, position: index })),
-      },
-      [uuidv4()]: {
-        title: 'Assigned',
-        items: getProjects
-        .filter(getProjects => getProjects.status === 'Assigned')
-        .map((item, index) => ({ ...item, position: index })),
-      },
-    }
-  );
+// Filter projects that exist in UserProjects
+const assignedProjects = allProjects.filter(item => userProjectIds.includes(item.id));
 
-  const onDragEnd = (result, columns, setColumns) => {
-    if (!result.destination) return;
-    const { source, destination } = result;
-    // Get the source and destination columns
-    const sourceColumn = columns[source.droppableId];
-    const destColumn = columns[destination.droppableId];
-    // Get the dragged item
-    const item = sourceColumn.items[source.index];
-    // Update the item's status
-    item.Status = destColumn.title;
-    // Update the state locally to provide a smooth UI update
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        items: sourceColumn.items.filter((_, index) => index !== source.index),
-      },
-      [destination.droppableId]: {
-        ...destColumn,
-        items: [...destColumn.items, item],
-      },
-    });
-  
-   // Send an AJAX request to update the item's status on the server
-    axios.put(`/api/project-users/store`, { 
-      project_id: item.id,
-      user_id: user.id,
-      position: destColumn.title
-    })
-      .then(response => {
-       
+// Create a list of projects that are not in UserProjects
+const remainingProjects = getProjects.filter(item => !userProjectIds.includes(item.id));
+
+// Initialize the columns state
+const initialColumns = {
+  [uuidv4()]: {
+    title: 'Projects',
+    items: remainingProjects,
+  },
+  [uuidv4()]: {
+    title: 'Assigned',
+    items: assignedProjects,
+  },
+};
+
+const [columns, setColumns] = useState(initialColumns);
+
+
+const onDragEnd = (result, columns, setColumns) => {
+  if (!result.destination) return;
+  const { source, destination } = result;
+
+  // Get the source and destination columns
+  const sourceColumn = columns[source.droppableId];
+  const destColumn = columns[destination.droppableId];
+
+  // Get the dragged item
+  const item = sourceColumn.items[source.index];
+
+  // Check if the item's title is the same as the destination column's title
+  if (sourceColumn.title === destColumn.title) {
+    // No need to move the item within the same column
+    return;
+  }
+
+  // Update the item's status
+  item.Status = destColumn.title;
+
+  // Update the state locally to provide a smooth UI update
+  setColumns((prevColumns) => {
+    const updatedColumns = { ...prevColumns };
+
+    updatedColumns[source.droppableId] = {
+      ...sourceColumn,
+      items: sourceColumn.items.filter((_, index) => index !== source.index),
+    };
+
+    updatedColumns[destination.droppableId] = {
+      ...destColumn,
+      items: [...destColumn.items, item],
+    };
+
+    return updatedColumns;
+  });
+
+  // Handle API calls based on the destination column title
+  if (destColumn.title === 'Projects') {
+    axios.delete(`/api/project-users/delete/${item.id}`)
+      .then((response) => {
         console.log(response);
       })
-      .catch(error => {
-   
+      .catch((error) => {
         console.error(error);
       });
-    
-  };
+  } else {
+    axios.put('/api/project-users/store', {
+      project_id: item.id,
+      user_id: user.id,
+      position: destColumn.title,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+};
+
   return (
     <DragDropContext
       onDragEnd={(result) => {

@@ -4,7 +4,7 @@ import Authenticated from '@/Layouts/AuthenticatedLayout'
 import { Head, Link,router } from '@inertiajs/react'
 import React from 'react'
 
-const Create = ({auth,projects,user}) => {
+const Create = ({auth,projects,user,user_projects,all_projects}) => {
 
   
   return (
@@ -21,7 +21,7 @@ const Create = ({auth,projects,user}) => {
         <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-400">Here you can assign projects to your freelancers</p>
         <div class="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
            
-        <AssignProject getProjects={projects} user={user}/>
+        <AssignProject getProjects={projects} user={user} userProjects={user_projects} allProjects={all_projects} />
         </div>
     </div>
 </section>
