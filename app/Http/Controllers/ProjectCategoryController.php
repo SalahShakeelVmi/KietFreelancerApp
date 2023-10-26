@@ -57,9 +57,9 @@ class ProjectCategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProjectCategoryRequest $request, ProjectCategory $projectCategory,$id)
+    public function update(UpdateProjectCategoryRequest $request, ProjectCategory $projectCategory)
     {
-        $projectCategory->find($id)->update($request->validated());
+        $projectCategory->update($request->validated());
         Session::flash('message', 'Project category updated successfully!');
     }
 

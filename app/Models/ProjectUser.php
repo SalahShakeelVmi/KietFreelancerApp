@@ -25,4 +25,8 @@ class ProjectUser extends Model
         'position',
         'index'
     ];
+
+    public function projects(){
+        return $this->hasMany(Project::class, 'project_id');
+    }
 }

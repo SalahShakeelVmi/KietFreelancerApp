@@ -33,20 +33,14 @@ class ProjectUserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($id)
+    public function create(User $user)
     {
-        $user = User::find($id);
-        $user_projects = ProjectUser::where('user_id', $id)->get();
-
-        $user_project_ids = ProjectUser::pluck('project_id');
-
-        $projects = Project::with('projectcategory')->where('status',1)->whereNotIn('id',$user_project_ids)->latest()->get(); 
+        $projects = Project::with('projectcategory')->where('assign',0)->where('status',1)->latest()->get(); 
         $all_projects = Project::with('projectcategory')->where('status',1)->latest()->get();    
-        
         return Inertia::render('AssignProjects/Create',[
             'projects' => $projects,
             'user' => $user,
-            'user_projects' => $user_projects,
+            'user_projects' => $user->projects,
             'all_projects' => $all_projects
         ]);
     }
@@ -62,6 +56,7 @@ class ProjectUserController extends Controller
             'project_id' => $request->input('project_id'),
             'position' => $request->input('position'),
         ]);
+        Project::find($request->input('project_id'))->update(['assign' => 1]);
         return response()->json(['message' => 'added successfully']);
     }
 
@@ -94,7 +89,7 @@ class ProjectUserController extends Controller
      */
     public function destroy(ProjectUser $projectUser,$id)
     {
-       
+            Project::find($id)->update(['assign' => 0]);
             $projectUser->where('project_id',$id)->delete();
             return response()->json(['message' => 'deleted successfully']);
        

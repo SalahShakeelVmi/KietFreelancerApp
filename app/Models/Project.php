@@ -23,5 +23,7 @@ class Project extends Model
         'price',
         'status',
         'projectcategoryid',
+        'delivery_datetime',
+        'assign'
     ];
 }

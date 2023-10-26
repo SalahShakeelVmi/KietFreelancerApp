@@ -23,11 +23,10 @@ class UserController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request,$id){
+    public function updateStatus(Request $request,User $user){
         
-        $User = User::find($id);
-        $User->status = $request->status;
-        $User->save();
+        $user->status = $request->status;
+        $user->save();
     }
 
     /**
@@ -41,7 +40,7 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
         $request->validate([
             'username' => 'required|string|max:255',
@@ -49,7 +48,7 @@ class UserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $user->create([
             'name' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -80,12 +79,12 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,$id)
+    public function update(Request $request,User $user)
     {
-        $user = User::find($id);
+
         $request->validate([
             'username' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
         ]);
 
         $user->update([

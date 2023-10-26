@@ -21,8 +21,7 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request,$id){
-        $project = Project::find($id);
+    public function updateStatus(Request $request,Project $project){
         $project->status = $request->status;
         $project->save();
     }
