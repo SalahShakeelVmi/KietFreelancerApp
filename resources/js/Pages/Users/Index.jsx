@@ -77,7 +77,7 @@ const Index = ({auth, users}) => {
       const bulkDelete = () => {
         // Send a request to delete selected items
         const promises = selectedItem.map((itemId) =>
-          router.delete(route('users.destroy', { users: itemId }), {
+          router.delete(route('users.destroy', { user: itemId }), {
             preserveScroll: true,
           })
         );

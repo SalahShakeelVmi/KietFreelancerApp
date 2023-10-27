@@ -115,7 +115,6 @@ const onDragEnd = (result, columns, setColumns) => {
     axios.put('/api/project-users/store', {
       project_id: item.id,
       user_id: user.id,
-      position: destColumn.title,
     })
       .then((response) => {
         console.log(response);

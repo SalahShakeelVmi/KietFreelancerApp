@@ -34,20 +34,22 @@ Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.
 Route::post('/projects/store', [ProjectController::class, 'store'])->name('projects.store');
 
 Route::middleware(['admin_auth'])->group(function () {
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+    // Resource Route of users
+    Route::resource('users', UserController::class);
+
+    // Direct Route of users
     Route::put('/users/update-status/{user}', [UserController::class, 'updateStatus'])->name('users.update-status');
-    Route::get('/users/create',[UserController::class,"create"])->name('users.create');
-    Route::post('/users/store',[UserController::class,"store"])->name('users.store');
-    Route::delete('/users/destroy/{users}',[UserController::class,"destroy"])->name('users.destroy');
-    Route::put('/users/update/{user}',[UserController::class,"update"])->name('users.update');
     Route::get('/users/search',[UserController::class,"search"])->name('users.search');
 
-    Route::get('/project-categories', [ProjectCategoryController::class, 'index'])->name('project-categories.index');
-    Route::post('/project-categories/store', [ProjectCategoryController::class, 'store'])->name('project-categories.store');
-    Route::delete('/project-categories/destroy/{projectCategory}', [ProjectCategoryController::class, 'destroy'])->name('project-categories.destroy');
+    // Resource Route of projects categories
+    Route::resource('project-categories', ProjectCategoryController::class);
+
+    // Direct Route of projects categories
     Route::post('/project-categories/update/{projectCategory}', [ProjectCategoryController::class, 'update'])->name('project-categories.update');
     Route::get('/project-categories/search', [ProjectCategoryController::class, 'search'])->name('project-categories.search');
   
+    // Direct Route of projects
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
     Route::put('/projects/update-status/{project}', [ProjectController::class, 'updateStatus'])->name('projects.update-status');
     Route::get('/projects/search', [ProjectController::class, 'search'])->name('projects.search');
@@ -55,7 +57,7 @@ Route::middleware(['admin_auth'])->group(function () {
 
     Route::get('/project-users', [ProjectUserController::class, 'index'])->name('project-users.index');
     Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
-    Route::get('/project-users/create/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
+    Route::get('/project-users/users/projects/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
     
 
 });

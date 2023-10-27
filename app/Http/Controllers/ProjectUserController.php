@@ -36,7 +36,8 @@ class ProjectUserController extends Controller
     public function create(User $user)
     {
         $projects = Project::with('projectcategory')->where('assign',0)->where('status',1)->latest()->get(); 
-        $all_projects = Project::with('projectcategory')->where('status',1)->latest()->get();    
+        $all_projects = Project::with('projectcategory')->where('status',1)->latest()->get(); 
+           
         return Inertia::render('AssignProjects/Create',[
             'projects' => $projects,
             'user' => $user,
@@ -51,11 +52,10 @@ class ProjectUserController extends Controller
      */
     public function store(Request $request)
     {
-        ProjectUser::create([
-            'user_id' =>  $request->input('user_id'),
-            'project_id' => $request->input('project_id'),
-            'position' => $request->input('position'),
-        ]);
+       
+        $user = User::find($request->input('user_id'));
+        $user->project()->attach($request->input('project_id'));
+
         Project::find($request->input('project_id'))->update(['assign' => 1]);
         return response()->json(['message' => 'added successfully']);
     }

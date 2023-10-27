@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\ProjectUser;
+use App\Models\Project;
+
 
 class User extends Authenticatable
 {
@@ -48,4 +50,11 @@ class User extends Authenticatable
     public function projects(){
         return $this->hasMany(ProjectUser::class, 'user_id');
     }
+
+    public function project(){
+        return $this->belongsToMany(Project::class,'project_users','user_id','project_id')->withTimestamps();
+    }
+
+   
+    
 }

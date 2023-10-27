@@ -105,11 +105,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $users)
+    public function destroy(User $user)
     {
       
         try{
-            $users->delete();
+            $user->delete();
             Session::flash('message', 'User deleted successfully');
         }catch(\Exception $e){
             Session::flash('error', 'User not deleted');
