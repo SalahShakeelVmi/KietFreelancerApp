@@ -16,10 +16,14 @@ class DashboardController extends Controller
         $count_admin = User::where('role','admin')->wherenot('email','admin@gmail.com')->count();
         $count_freelancer = User::where('role','freelancer')->count();
         $count_project = Project::count();
+
+        $get_freelancer_projects =auth()->user()->project;
+     
         return Inertia::render('Dashboard', [
             'count_admin' => $count_admin,
             'count_freelancer' => $count_freelancer,
-            'count_project' => $count_project
+            'count_project' => $count_project,
+            'freelancer_assign_projects' => $get_freelancer_projects,
         ]);
     }
 
