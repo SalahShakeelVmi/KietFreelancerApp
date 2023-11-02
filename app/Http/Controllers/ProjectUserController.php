@@ -94,4 +94,11 @@ class ProjectUserController extends Controller
             return response()->json(['message' => 'deleted successfully']);
        
     }
+
+    public function freelancerDestroy(ProjectUser $projectUser,$id)
+    {
+            Project::find($id)->update(['assign' => 0]);
+            $projectUser->where('project_id',$id)->delete();
+       
+    }
 }

@@ -28,7 +28,9 @@ export default function Welcome({ auth, laravelVersion, phpVersion,projectCatego
         price: '',
         project_title: '',
         description: '',
+        delivery_datetime: '',
     })
+    const currentDate = new Date().toISOString().slice(0, 16);
 
     const onHandleChange = (e) => {
         const { name, value } = e.target;
@@ -149,6 +151,16 @@ export default function Welcome({ auth, laravelVersion, phpVersion,projectCatego
 
                     
                                                 </div>
+
+                                                
+                                            <div class="sm:col-span-8">
+
+<InputLabel for="delivery_datetime" value="Delivery Datetime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" />
+    <TextInput  min={currentDate} onChange={onHandleChange} name="delivery_datetime" value={data.delivery_datetime} type="datetime-local" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type delivery datetime" required=""/>
+    <InputError message={errors.delivery_datetime} className="mt-2" />
+
+
+</div>
                                                
                                                 <div class="sm:col-span-8">
                                                 <InputLabel for="description" value="Description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" />
@@ -158,6 +170,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion,projectCatego
 
                                                 </div>
                                             </div>
+
 
                                         
 

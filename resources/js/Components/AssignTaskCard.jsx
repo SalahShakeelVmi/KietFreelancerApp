@@ -1,4 +1,6 @@
 import * as React from "react";
+import moment from 'moment';
+import { NumericFormat } from 'react-number-format';
 import {
   Box,
   Card,
@@ -71,7 +73,15 @@ const AssignTaskCard = ({ item, index }) => {
                 >
                   <Grid item xs={2} sm={4} md={4} key={index}>
                     <Title>Amount</Title>
-                    <SubTitle>{item.price}</SubTitle>
+                    <SubTitle>
+                    <NumericFormat
+  value={ item.price}
+  thousandsGroupStyle="lakh"
+  thousandSeparator=","
+  displayType="text"
+
+/>
+                    </SubTitle>
 
                   </Grid>
                   <Grid item xs={2} sm={4} md={4} key={index}>
@@ -81,7 +91,9 @@ const AssignTaskCard = ({ item, index }) => {
                   </Grid>
                   <Grid item xs={2} sm={4} md={4} key={index}>
                     <Title>Due Date</Title>
-                    <SubTitle>{item.due_Date}</SubTitle>
+                    <SubTitle>
+                      
+                      {   moment(new Date(item.delivery_datetime)).format('MMM D YY, h:mm:ss a')}</SubTitle>
                   </Grid>
                 </Grid>
               </Box>

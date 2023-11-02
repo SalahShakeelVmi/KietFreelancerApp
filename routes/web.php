@@ -29,6 +29,8 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+Route::delete('/project-users/delete/{id}', [ProjectUserController::class, 'freelancerDestroy'])->name('project-users.freelancer.delete');
 });
 
 Route::post('/projects/store', [ProjectController::class, 'store'])->name('projects.store');
@@ -58,7 +60,7 @@ Route::middleware(['admin_auth'])->group(function () {
     Route::get('/project-users', [ProjectUserController::class, 'index'])->name('project-users.index');
     Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
     Route::get('/project-users/users/projects/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
-    
+   
 
 });
 

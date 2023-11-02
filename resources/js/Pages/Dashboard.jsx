@@ -1,16 +1,67 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head,router } from '@inertiajs/react';
 import moment from 'moment';
+import { NumericFormat } from 'react-number-format';
+import DangerButton from '@/Components/DangerButton';
+import PrimaryButton from '@/Components/PrimaryButton';
+import Modal from '@/Components/Modal';
+import { useState } from 'react';
 export default function Dashboard({ auth,count_admin,count_freelancer,count_project,freelancer_assign_projects }) {
     const totalPrice = freelancer_assign_projects.reduce((accumulator, project) => {
         return accumulator + parseFloat(project.price)*50/100;
       }, 0);
+
+
+      const [isOpenModel, setOpenModel] = useState(false);
+      const [id, setId] = useState('');
+      const [status, setStatus] = useState('');
+      
+
+      const openModal = (projectid,projectstatus) => {
+        setOpenModel(true);
+        setId(projectid);
+        setStatus(projectstatus);
+      }
+      const closeOpenModal = () => {
+        setOpenModel(false);
+      }
+
+      const updateStatus = () => {
+        router.delete(route('project-users.freelancer.delete',id),{
+            status,
+            preserveScroll: true
+        })
+        closeOpenModal();
+      }
+
+
+      const [searchText, setSearchText] = useState('');
+      const filteredProjects = freelancer_assign_projects.filter((project) =>
+        project.project_title.toLowerCase().includes(searchText.toLowerCase())
+      );
+    
+      const handleSearchInputChange = (e) => {
+        setSearchText(e.target.value);
+      };
+
     return (
         <AuthenticatedLayout
             user={auth.user}
             header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
         >
             <Head title="Dashboard" />
+
+
+            <Modal show={isOpenModel} onClose={closeOpenModal}>
+                <div className="p-4">
+                    <h2>Confirmation</h2>
+                    <p>Are you sure you want to delete this project?</p>
+                    <div className="space-x-4 mt-4">
+                        <DangerButton onClick={updateStatus}>Confirm</DangerButton>
+                        <PrimaryButton onClick={closeOpenModal}>Close</PrimaryButton>
+                    </div>
+                </div>
+            </Modal>
 
             {/* {auth.user.role === "admin" && 
             <div className="py-12">
@@ -37,7 +88,8 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
             </svg>
         </div>
-        <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Your Projects..." required/>
+        <input type="search"    value={searchText}
+        onChange={handleSearchInputChange} id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Your Projects..." required/>
        
     </div>
 </form>
@@ -98,8 +150,17 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                       <span class="dark:text-white">{freelancer_assign_projects.length}</span>
                   </h5>
                   <h5>
-                      <span class="text-gray-500">Total sales:</span>
-                      <span class="dark:text-white">Rs {totalPrice.toFixed(2)}</span>
+                      <span class="text-gray-500">Total Amount:</span>
+                      <span class="dark:text-white">Rs.
+                      <NumericFormat
+  value={ totalPrice.toFixed(2)}
+  thousandsGroupStyle="lakh"
+  thousandSeparator=","
+  displayType="text"
+
+/>
+                      </span>
+                
                   </h5>
               </div>
              
@@ -112,16 +173,17 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                           <th scope="col" class="px-4 py-3">Project</th>
                           <th scope="col" class="px-4 py-3">Category</th>
                           <th scope="col" class="px-4 py-3">Status</th>
-                      
+                          <th scope="col" class="px-4 py-3">Delete Assign Task</th>
                          
                           <th scope="col" class="px-4 py-3">Amount</th>
+                          <th scope="col" class="px-4 py-3">DeadLine</th>
                           <th scope="col" class="px-4 py-3">Created At</th>
                         
                       </tr>
                   </thead>
                   <tbody>
                        
-                  {freelancer_assign_projects.map((project, index) => (
+                  {filteredProjects.map((project, index) => (
                       <tr  class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
  <td class="px-4 py-2">
                               <span class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">{index+1}</span>
@@ -132,7 +194,9 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                           {project.project_title}
                           </th>
                           <td class="px-4 py-2">
-                              <span class="bg-primary-100 text-primary-800 text-xs font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">{project.projectcategoryid}</span>
+                          
+                              <span class="bg-blue-100 text-blue-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">  {project.projectcategory.category_name}</span>
+                             
                           </td>
                           <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                               <div class="flex items-center">
@@ -140,10 +204,39 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                                   {project.status === 1 ? 'Active' : 'Inactive'}
                               </div>
                           </td>
+
+                          <td class="px-4 py-2">
+                          <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" 
+                                    class="sr-only peer"
+                                    checked = {project.assign}
+                                    onChange={(e)=>{
+                                        e.preventDefault();
+                                         const newstatus = !project.assign;
+                                        // updateStatus(project.id,newstatus);
+                                        openModal(project.id,newstatus);
+                                    }}
+                                   
+                                />
+                                <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                </label>
+                          </td>
                          
                         
-                          <td class="px-4 py-2">RS {project.price*50/100}</td>
-                          <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{moment(new Date(project.created_at)).fromNow()}</td>
+                          <td class="px-4 py-2">RS.  
+                          <NumericFormat
+  value={ project.price*50/100}
+  thousandsGroupStyle="lakh"
+  thousandSeparator=","
+  displayType="text"
+
+/>
+                           </td>
+                           <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                           <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{moment(new Date(project.delivery_datetime)).format('MMMM Do YYYY, h:mm:ss a')}</span>
+                           </td>
+                         
+                          <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{moment(new Date(project.updated_at)).fromNow()}</td>
                          
                       </tr>
 
@@ -152,44 +245,7 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                   </tbody>
               </table>
           </div>
-          <nav class="flex flex-col items-start justify-between p-4 space-y-3 md:flex-row md:items-center md:space-y-0" aria-label="Table navigation">
-              <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                 
-              </span>
-              <ul class="inline-flex items-stretch -space-x-px">
-                  <li>
-                      <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                          <span class="sr-only">Previous</span>
-                          <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
-                          </svg>
-                      </a>
-                  </li>
-                  <li>
-                      <a href="#" class="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">1</a>
-                  </li>
-                  <li>
-                      <a href="#" class="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">2</a>
-                  </li>
-                  <li>
-                      <a href="#" aria-current="page" class="z-10 flex items-center justify-center px-3 py-2 text-sm leading-tight border text-primary-600 bg-primary-50 border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">3</a>
-                  </li>
-                  <li>
-                      <a href="#" class="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">...</a>
-                  </li>
-                  <li>
-                      <a href="#" class="flex items-center justify-center px-3 py-2 text-sm leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">100</a>
-                  </li>
-                  <li>
-                      <a href="#" class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                          <span class="sr-only">Next</span>
-                          <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-                          </svg>
-                      </a>
-                  </li>
-              </ul>
-          </nav>
+      
       </div>
   </div>
 </section>

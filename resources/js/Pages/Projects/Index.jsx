@@ -9,7 +9,7 @@ import Dropdown from '@/Components/Dropdown'
 import Modal from '@/Components/Modal'
 import DangerButton from '@/Components/DangerButton';
 import PrimaryButton from '@/Components/PrimaryButton';
-
+import { NumericFormat } from 'react-number-format';
 const Index = ({ auth, projects }) => {
 
     const [searchValue, setSearchValue] = useState('');
@@ -123,8 +123,20 @@ const handleOpenModal = (project) => {
                                         <h2 class="font-semibold ">
                                          Project Category: {readItem.projectcategory.category_name}
                                         </h2>
+                                        <h2 class="font-semibold ">
+                                         Delivery At: {
+                                         moment(new Date(readItem.delivery_datetime)).format('MMMM Do YYYY, h:mm:ss a')
+                                         }
+
+                                        </h2>
                                         <p class="font-bold">
-                                            Rs: {readItem.price}
+                                            Rs: <NumericFormat
+  value={ readItem.price}
+  thousandsGroupStyle="lakh"
+  thousandSeparator=","
+  displayType="text"
+
+/>
                                         </p>
                                     </div>
                                     <div>
@@ -185,6 +197,7 @@ const handleOpenModal = (project) => {
                             <th scope="col" class="px-4 py-3">Project Title</th>
                             <th scope="col" class="px-4 py-3">Price</th>
                             <th scope="col" class="px-4 py-3">Status</th>
+                            <th scope="col" class="px-4 py-3">Delivery DateTime</th>
                             <th scope="col" class="px-4 py-3">Created at</th>
                             <th scope="col" class="px-4 py-3">
                                 <span class="sr-only">Actions</span>
@@ -199,7 +212,15 @@ const handleOpenModal = (project) => {
                                 <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{index + 1}</th>
                                 <td class="px-4 py-3">{project.projectcategory.category_name}</td>
                                 <td class="px-4 py-3">{project.project_title}</td>
-                                <td class="px-4 py-3">Rs {project.price}</td>
+                                <td class="px-4 py-3">Rs.
+                                <NumericFormat
+                                    value={ project.price}
+                                    thousandsGroupStyle="lakh"
+                                    thousandSeparator=","
+                                    displayType="text"
+
+                                    />
+                                </td>
                                 <td class="px-4 py-3">
                                 
                                 <label class="relative inline-flex items-center cursor-pointer">
@@ -217,6 +238,9 @@ const handleOpenModal = (project) => {
                                 </label>
     
                                 </td>
+                                <td class="px-4 py-3">
+                                <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{ moment(new Date(project.delivery_datetime)).format('MMMM Do YYYY, h:mm:ss a') }</span>
+                                    </td>
                                 <td class="px-4 py-3">{ moment(new Date(project.created_at)).fromNow() }</td>
                                 <td class="px-4 py-3 flex items-center justify-end">
                                     <Dropdown>

@@ -25,9 +25,10 @@ class StoreProjectRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255'],
             'projectcategoryid' => ['required'],
-            'price' => ['required', 'numeric'],
+            'price' => ['required', 'numeric', 'gt:0', 'lt:99999'],
             'project_title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
+            'delivery_datetime' => ['required'],
         ];
     }
 
