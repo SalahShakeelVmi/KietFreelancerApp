@@ -10,6 +10,7 @@ use App\Http\Controllers\ProjectCategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\WorkSpaceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +32,8 @@ Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.up
 Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 Route::delete('/project-users/delete/{id}', [ProjectUserController::class, 'freelancerDestroy'])->name('project-users.freelancer.delete');
+
+Route::resource('dashboard/workspace', WorkSpaceController::class);
 });
 
 Route::post('/projects/store', [ProjectController::class, 'store'])->name('projects.store');

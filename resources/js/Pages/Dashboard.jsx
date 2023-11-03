@@ -1,11 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head,router } from '@inertiajs/react';
+import { Head,Link,router } from '@inertiajs/react';
 import moment from 'moment';
 import { NumericFormat } from 'react-number-format';
 import DangerButton from '@/Components/DangerButton';
 import PrimaryButton from '@/Components/PrimaryButton';
 import Modal from '@/Components/Modal';
 import { useState } from 'react';
+import RoundedHoverButton from '@/Components/RoundedHoverButton';
 export default function Dashboard({ auth,count_admin,count_freelancer,count_project,freelancer_assign_projects }) {
     const totalPrice = freelancer_assign_projects.reduce((accumulator, project) => {
         return accumulator + parseFloat(project.price)*50/100;
@@ -178,7 +179,7 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                           <th scope="col" class="px-4 py-3">Amount</th>
                           <th scope="col" class="px-4 py-3">DeadLine</th>
                           <th scope="col" class="px-4 py-3">Created At</th>
-                        
+                          <th scope="col" class="px-4 py-3">WorkSpace</th>
                       </tr>
                   </thead>
                   <tbody>
@@ -237,6 +238,14 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                            </td>
                          
                           <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">{moment(new Date(project.updated_at)).fromNow()}</td>
+                         
+                          <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            <Link href={route('workspace.edit',project.id)}>
+                            <RoundedHoverButton svg_icon={
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" fill='currentColor' height="15" viewBox="0 0 12.7 12.7" id="list"><path fill-rule="evenodd" d="M6 3C4.355 3 3 4.355 3 6l-.004 26.004c0 1.335 2.002 1.335 2.002 0L5 6c0-.571.429-1 1-1h28c.571 0 1 .429 1 1v18c-.02 1.352 2.02 1.352 2 0V6c0-1.645-1.355-3-3-3zm6 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3.9.002c-1.303.09-1.21 2.034.096 2H28c1.305-.028 1.305-1.972 0-2H15.996a1.018 1.018 0 0 0-.096 0zM12 17a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm16.11 0c-.037 0-.074 0-.11.004H15.996a1.018 1.018 0 0 0-.096 0c-1.226.152-1.14 1.958.096 1.992H28c1.373.121 1.488-1.967.11-1.996zm-12.114 5.998c-1.305.028-1.305 1.972 0 2H28c1.362.03 1.362-2.03 0-2zM12 23a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm0 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3.996 0c-1.362-.03-1.362 2.03 0 2h10.002c1.362.03 1.362-2.03 0-2zM12 35a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm3.9 0c-1.334.064-1.239 2.066.096 2.002h8.002c1.335 0 1.335-2.002 0-2.002h-8.002a1.018 1.018 0 0 0-.096 0zm-11.914.982a1 1 0 0 0-.99 1.02L3 42c0 1.645 1.355 3 3 3h20c1.352.02 1.352-2.02 0-2H6c-.571 0-1-.429-1-1l-.002-4.998a1 1 0 0 0-1.012-1.02zm32.016-8.984c-4.959 0-8.998 4.041-8.998 9s4.04 9.006 8.998 9.006c4.959 0 8.998-4.047 8.998-9.006 0-4.959-4.04-9-8.998-9zm0 2.002A6.982 6.982 0 0 1 43 35.998a6.987 6.987 0 0 1-6.998 7.004 6.987 6.987 0 0 1-6.998-7.004A6.982 6.982 0 0 1 36.002 29zm3.158 3.875a1 1 0 0 0-.685.303l-3.536 3.535-1.41-1.416a1.002 1.002 0 1 0-1.418 1.416l2.12 2.119a1 1 0 0 0 1.415 0l4.247-4.238a1 1 0 0 0-.733-1.719z"  font-family="sans-serif" font-weight="400"  transform="scale(.26458)"></path></svg>
+                            } />
+                            </Link>
+                          </td>
                          
                       </tr>
 
