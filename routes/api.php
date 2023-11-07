@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\WorkSpaceController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::put('/project-users/store', [ProjectUserController::class, 'store'])->name('project-users.store');
 Route::delete('/project-users/delete/{id}', [ProjectUserController::class, 'destroy'])->name('project-users.delete');
+
+Route::put('/workspace/update/{id}', [WorkSpaceController::class, 'update'])->name('workspace.update');

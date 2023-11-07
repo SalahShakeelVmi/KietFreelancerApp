@@ -29,6 +29,7 @@ class Project extends Model
         'status',
         'projectcategoryid',
         'delivery_datetime',
-        'assign'
+        'assign',
+        'freelancer_status',
     ];
 }

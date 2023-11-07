@@ -45,7 +45,7 @@ class WorkSpaceController extends Controller
     public function edit(Project $workspace)
     {
         return Inertia::render('WorkSpace/Edit',[
-            'project' => $workspace
+            'project' => $workspace->with('projectcategory')->first()
         ]);
     }
 
@@ -54,7 +54,10 @@ class WorkSpaceController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $projects = Project::find($id);
+        $projects->update([
+            'freelancer_status' => $request->status
+        ]);
     }
 
     /**
@@ -63,5 +66,5 @@ class WorkSpaceController extends Controller
     public function destroy(string $id)
     {
         //
-    }
+    }   
 }

@@ -4,11 +4,9 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Grid, Box } from "@mui/material";
 import Divider from "@mui/material/Divider";
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-
-
-import { columnsFromBackend } from "./KanbanData";
 import WorkspaceTaskCard from "./WorkspaceTaskCard";
-
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 const Container = styled("div")(() => ({
   display: "flex",
   flexDirection: "row",
@@ -42,43 +40,78 @@ const FilterIcon = styled("span")(() => ({
   color: "text.secondary",
 }));
 
-const Workspace = () => {
-  const [columns, setColumns] = useState(columnsFromBackend);
+const Workspace = ({ project }) => {
+  const initialColumns = {
+    [uuidv4()]: {
+      title: '',
+      items:  [project],
+    },
+    [uuidv4()]: {
+      title: 'progress',
+      items: [],
+    },
+    [uuidv4()]: {
+      title: 'pending',
+      items: [],
+    },
+    [uuidv4()]: {
+      title: 'completed',
+      items: [],
+    },
+  };
+
+  const [columns, setColumns] = useState(initialColumns);
+  
 
   const onDragEnd = (result, columns, setColumns) => {
     if (!result.destination) return;
     const { source, destination } = result;
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = columns[source.droppableId];
-      const destColumn = columns[destination.droppableId];
-      const sourceItems = [...sourceColumn.items];
-      const destItems = [...destColumn.items];
-      const [removed] = sourceItems.splice(source.index, 1);
-      destItems.splice(destination.index, 0, removed);
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...sourceColumn,
-          items: sourceItems,
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          items: destItems,
-        },
-      });
-    } else {
-      const column = columns[source.droppableId];
-      const copiedItems = [...column.items];
-      const [removed] = copiedItems.splice(source.index, 1);
-      copiedItems.splice(destination.index, 0, removed);
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...column,
-          items: copiedItems,
-        },
-      });
+  
+    // Get the source and destination columns
+    const sourceColumn = columns[source.droppableId];
+    const destColumn = columns[destination.droppableId];
+  
+    // Get the dragged item
+    const item = sourceColumn.items[source.index];
+  
+    // Check if the item's title is the same as the destination column's title
+    if (sourceColumn.title === destColumn.title) {
+      // No need to move the item within the same column
+      return;
     }
+  
+    // Update the item's status
+    item.Status = destColumn.title;
+  
+    // Update the state locally to provide a smooth UI update
+    setColumns((prevColumns) => {
+      const updatedColumns = { ...prevColumns };
+  
+      updatedColumns[source.droppableId] = {
+        ...sourceColumn,
+        items: sourceColumn.items.filter((_, index) => index !== source.index),
+      };
+  
+      updatedColumns[destination.droppableId] = {
+        ...destColumn,
+        items: [...destColumn.items, item],
+      };
+  
+      return updatedColumns;
+    });
+  
+    // Handle API calls based on the destination column title
+  
+      axios.put(`/api/workspace/update/${item.id}`, {
+       freelancer_status: destColumn.title
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    
   };
   return (
     <DragDropContext
@@ -88,7 +121,7 @@ const Workspace = () => {
     >
       <Container>
         <TaskColumnStyles>
-          {Object.entries(columns).map(([columnId, column], index) => {
+        {Object.entries(columns).map(([columnId, column], index) => {
             return (
               <Droppable key={index} droppableId={columnId}>
                 {(provided, snapshot ) => (
@@ -102,7 +135,7 @@ const Workspace = () => {
                         rowSpacing={1}
                         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                       >
-                        <Grid item xs={10} key={index}>
+                        <Grid item xs={12} key={index}>
                           <Title>{column.title}</Title>
                         </Grid>
                         <Grid
@@ -113,16 +146,14 @@ const Workspace = () => {
                           alignContent="flex-end"
                           justifyContent="flex-end"
                         >
-                          <FilterIcon>
-                            <FilterAltIcon />
-                          </FilterIcon>
+                         
                         </Grid>
                       </Grid>
                     </Box>
                     <Divider />
 
                     {column.items.map((item, index) => (
-                      <WorkspaceTaskCard key={index} item={item} index={index} />
+                      <WorkspaceTaskCard  key={index} item={item} index={index}/>
                     ))}
                     {provided.placeholder}
                   </TaskList>

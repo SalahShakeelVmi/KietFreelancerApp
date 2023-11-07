@@ -1,4 +1,6 @@
 import * as React from "react";
+import moment from 'moment';
+import { NumericFormat } from 'react-number-format';
 import {
   Box,
   Card,
@@ -56,7 +58,7 @@ const rightIconAction = (
 
 const WorkspaceTaskCard = ({ item, index }) => {
   return (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
+    <Draggable key={item.id} draggableId={String(item.id)} index={index}>
       {(provided) => (
         <div
           ref={provided.innerRef}
@@ -67,13 +69,13 @@ const WorkspaceTaskCard = ({ item, index }) => {
             <CardHeader
               avatar={
                 <Avatar sx={{ bgcolor: "#2C5CC9" }} aria-label="recipe">
-                  {item.assigned_To.charAt(0).toUpperCase()}
+                  {item.project_title.charAt(0).toUpperCase()}
                 </Avatar>
               }
-              action={rightIconAction}
+           
             />
             <CardContent sx={{ p: "0 16px" }}>
-              <Heading>{item.assigned_To}</Heading>
+              <Heading className="text-left">{item.project_title}</Heading>
               <Typography
                 sx={{ fontSize: 14 }}
                 color="text.secondary"
@@ -88,35 +90,33 @@ const WorkspaceTaskCard = ({ item, index }) => {
                   columns={{ xs: 4, sm: 8, md: 12 }}
                 >
                   <Grid item xs={2} sm={4} md={4} key={index}>
-                    <Title>Assignee</Title>
-                    <SubTitle>{item.assignee}</SubTitle>
+                    <Title>Amount</Title>
+                    <SubTitle>
+                    <NumericFormat
+  value={ item.price}
+  thousandsGroupStyle="lakh"
+  thousandSeparator=","
+  displayType="text"
+
+/>
+                    </SubTitle>
 
                   </Grid>
                   <Grid item xs={2} sm={4} md={4} key={index}>
-                    <Title>Priority</Title>
-                    <SubTitle>{item.priority}</SubTitle>
+                    <Title>Category</Title>
+                    <SubTitle>{item.projectcategory.category_name}</SubTitle>
 
                   </Grid>
                   <Grid item xs={2} sm={4} md={4} key={index}>
                     <Title>Due Date</Title>
-                    <SubTitle>{item.due_Date}</SubTitle>
+                    <SubTitle>
+                      
+                      {   moment(new Date(item.delivery_datetime)).format('MMM D YY, h:mm:ss a')}</SubTitle>
                   </Grid>
                 </Grid>
               </Box>
             </CardContent>
-            <CardActions>
-              <Chip
-                label={"Qty:7"}
-                sx={{
-                  m: 1,
-                  minWidth: "70px",
-                  maxHeight: "25px",
-                  background: "#EEFFF3",
-                  color: "#1CA13E",
-                }}
-                variant="outlined"
-              />
-            </CardActions>
+           
           </Card>
         </div>
       )}
