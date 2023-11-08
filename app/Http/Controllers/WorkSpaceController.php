@@ -44,8 +44,9 @@ class WorkSpaceController extends Controller
      */
     public function edit(Project $workspace)
     {
+        $project = $workspace->with('projectcategory')->find($workspace->id);
         return Inertia::render('WorkSpace/Edit',[
-            'project' => $workspace->with('projectcategory')->first()
+            'project' => $project,
         ]);
     }
 
@@ -56,7 +57,7 @@ class WorkSpaceController extends Controller
     {
         $projects = Project::find($id);
         $projects->update([
-            'freelancer_status' => $request->status
+            'freelancer_status' => $request->freelancer_status
         ]);
     }
 

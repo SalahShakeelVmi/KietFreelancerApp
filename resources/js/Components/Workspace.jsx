@@ -41,22 +41,25 @@ const FilterIcon = styled("span")(() => ({
 }));
 
 const Workspace = ({ project }) => {
+  // Convert the object to an array using Object.values()
+  const projectArray = Object.values([project]);
+
   const initialColumns = {
     [uuidv4()]: {
       title: '',
-      items:  [project],
+      items: projectArray.filter(item => item.freelancer_status === null).map((item, index) => ({ ...item, position: index })),
     },
     [uuidv4()]: {
       title: 'progress',
-      items: [],
+      items: projectArray.filter(item => item.freelancer_status === 'progress').map((item, index) => ({ ...item, position: index })),
     },
     [uuidv4()]: {
       title: 'pending',
-      items: [],
+      items: projectArray.filter(item => item.freelancer_status === 'pending').map((item, index) => ({ ...item, position: index })),
     },
     [uuidv4()]: {
       title: 'completed',
-      items: [],
+      items: projectArray.filter(item => item.freelancer_status === 'completed').map((item, index) => ({ ...item, position: index })),
     },
   };
 

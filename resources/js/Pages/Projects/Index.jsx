@@ -197,6 +197,7 @@ const handleOpenModal = (project) => {
                             <th scope="col" class="px-4 py-3">Project Title</th>
                             <th scope="col" class="px-4 py-3">Price</th>
                             <th scope="col" class="px-4 py-3">Status</th>
+                            <th scope="col" class="px-4 py-3">Freelancer Status</th>
                             <th scope="col" class="px-4 py-3">Delivery DateTime</th>
                             <th scope="col" class="px-4 py-3">Created at</th>
                             <th scope="col" class="px-4 py-3">
@@ -238,6 +239,31 @@ const handleOpenModal = (project) => {
                                 </label>
     
                                 </td>
+                                <td class="px-4 py-3">
+                                { project.freelancer_status === "pending" && (
+                  <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                   {project.freelancer_status}
+                 </span>
+                )}
+
+{ project.freelancer_status === "completed" && (
+                 <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                   {project.freelancer_status}
+                 </span>
+                )}
+
+{ project.freelancer_status === "progress" && (
+                <span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"> 
+                  {project.freelancer_status}
+                 </span>
+                )}
+
+{ project.freelancer_status === null && (
+                  <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                  No Status
+                 </span>
+                )}
+                                    </td>
                                 <td class="px-4 py-3">
                                 <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">{ moment(new Date(project.delivery_datetime)).format('MMMM Do YYYY, h:mm:ss a') }</span>
                                     </td>
