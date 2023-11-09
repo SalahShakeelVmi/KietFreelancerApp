@@ -57,6 +57,10 @@ export default function Authenticated({ user, header, children }) {
                                 <NavLink href={route('project-users.index')} active={route().current('project-users.index') || route().current('project-users.search') || route().current('project-users.create')}>
                                     Assign Projects
                                 </NavLink>
+
+                                <NavLink href={route('payments.index')} active={route().current('payments.index') || route().current('payments.search')}>
+                                    Payments
+                                </NavLink>
                              
                             </div>
                              }

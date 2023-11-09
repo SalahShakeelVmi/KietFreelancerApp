@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\WorkSpaceController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,7 @@ Route::middleware(['admin_auth'])->group(function () {
     // Direct Route of users
     Route::put('/users/update-status/{user}', [UserController::class, 'updateStatus'])->name('users.update-status');
     Route::get('/users/search',[UserController::class,"search"])->name('users.search');
+    Route::get('/users/role-filter/{role}',[UserController::class,"roleFilter"])->name('users.role-filter');
 
     // Resource Route of projects categories
     Route::resource('project-categories', ProjectCategoryController::class);
@@ -65,7 +67,7 @@ Route::middleware(['admin_auth'])->group(function () {
     Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
     Route::get('/project-users/users/projects/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
    
-
+    Route::resource('payments', PaymentController::class);
 });
 
 Route::middleware(['customer_auth'])->group(function () {

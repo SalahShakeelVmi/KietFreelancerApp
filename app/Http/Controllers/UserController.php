@@ -23,6 +23,22 @@ class UserController extends Controller
         ]);
     }
 
+    public function roleFilter($role)
+    {
+        if($role == 'all'){
+            $users =  User::wherenot('email','admin@gmail.com')->latest()->paginate(10);
+            return Inertia::render('Users/Index', [
+                'users' => $users
+            ]);
+        }
+        else{
+        $users =  User::wherenot('email','admin@gmail.com')->where('role',$role)->latest()->paginate(10);
+        return Inertia::render('Users/Index', [
+            'users' => $users
+        ]);
+    }
+    }
+
     public function updateStatus(Request $request,User $user){
         
         $user->status = $request->status;

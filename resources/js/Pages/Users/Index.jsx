@@ -135,7 +135,15 @@ const Index = ({auth, users}) => {
         );
       };
 
-    
+
+
+    const roleFilter = (role)=>{
+        router.visit(route('users.role-filter',{role}),{
+            preserveState: true,
+            replace: true
+        })
+   
+    }
 
   return (
     <Authenticated user={auth.user}>
@@ -191,6 +199,13 @@ const Index = ({auth, users}) => {
                             Add Admin
                         </PrimaryButton>
                     </Link>
+
+                    <select name='role' onChange={(e)=>roleFilter(e.target.value)} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                        <option value={'all'}>All</option>
+                        <option value={'customer'}>Customer</option>
+                        <option value={'admin'}>Admin</option>
+                        <option value={'freelancer'}>Freelancer</option>
+                    </select>
                   
                     {selectedItem.length > 0 && (
                         <DangerButton className='ml-2' onClick={BulkModelDelete} >Delete Selected</DangerButton>
