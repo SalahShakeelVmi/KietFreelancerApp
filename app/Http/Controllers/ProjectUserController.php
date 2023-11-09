@@ -97,7 +97,7 @@ class ProjectUserController extends Controller
 
     public function freelancerDestroy(ProjectUser $projectUser,$id)
     {
-            Project::find($id)->update(['assign' => 0]);
+            Project::find($id)->update(['assign' => 0,'freelancer_status' => null]);
             $projectUser->where('project_id',$id)->delete();
        
     }

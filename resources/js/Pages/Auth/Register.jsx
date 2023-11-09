@@ -12,6 +12,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        role: '',
     });
 
     useEffect(() => {
@@ -63,6 +64,19 @@ export default function Register() {
                     />
 
                     <InputError message={errors.email} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel htmlFor="role" value="Register As" />
+
+                  
+                    <select id='role' name='role' value={data.role} onChange={(e) => setData('role', e.target.value)} isFocused={true} autoComplete='role' required  className=" border-gray-300 rounded-md shadow-sm mt-1 block w-full">
+                        <option value="" disabled selected>Select One</option>
+                        <option value="customer">Customer</option>
+                        <option value="freelancer">Freelancer</option>
+                    </select>
+
+                    <InputError message={errors.role} className="mt-2" />
                 </div>
 
                 <div className="mt-4">

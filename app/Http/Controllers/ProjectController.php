@@ -15,7 +15,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with('projectcategory')->latest()->paginate(10);
+        $projects = Project::with('projectcategory')->with('customers')->latest()->paginate(10);
+       
         return Inertia::render('Projects/Index', [
             'projects' => $projects
         ]);

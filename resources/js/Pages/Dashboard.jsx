@@ -174,6 +174,7 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                           <th scope="col" class="px-4 py-3">Project</th>
                           <th scope="col" class="px-4 py-3">Category</th>
                           <th scope="col" class="px-4 py-3">Status</th>
+                          <th scope="col" class="px-4 py-3">Your Status</th>
                           <th scope="col" class="px-4 py-3">Delete Assign Task</th>
                          
                           <th scope="col" class="px-4 py-3">Amount</th>
@@ -206,6 +207,33 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                               </div>
                           </td>
 
+                          <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                          { project.freelancer_status === "pending" && (
+                  <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                   {project.freelancer_status}
+                 </span>
+                )}
+
+{ project.freelancer_status === "completed" && (
+                 <span class="bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                   {project.freelancer_status}
+                 </span>
+                )}
+
+{ project.freelancer_status === "progress" && (
+                <span class="bg-gray-100 text-gray-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300"> 
+                  {project.freelancer_status}
+                 </span>
+                )}
+
+{ project.freelancer_status === null && (
+                  <span class="bg-red-100 text-red-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                  No Status
+                 </span>
+                )}
+                            </td>
+                         
+
                           <td class="px-4 py-2">
                           <label class="relative inline-flex items-center cursor-pointer">
                                 <input type="checkbox" 
@@ -222,6 +250,7 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                                 <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                                 </label>
                           </td>
+
                          
                         
                           <td class="px-4 py-2">RS.  

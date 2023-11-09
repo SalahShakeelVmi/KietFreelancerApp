@@ -17,7 +17,7 @@ class DashboardController extends Controller
         $count_freelancer = User::where('role','freelancer')->count();
         $count_project = Project::count();
 
-        $get_freelancer_projects =auth()->user()->project()->with('projectcategory')->get();
+        $get_freelancer_projects =auth()->user()->project()->with('projectcategory')->latest()->get();
      
         return Inertia::render('Dashboard', [
             'count_admin' => $count_admin,

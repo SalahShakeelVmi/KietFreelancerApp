@@ -25,6 +25,7 @@ use App\Http\Controllers\WorkSpaceController;
 
 Route::get('/',[CustomerController::class,'index'])->name('home');
 
+
 Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -65,6 +66,10 @@ Route::middleware(['admin_auth'])->group(function () {
     Route::get('/project-users/users/projects/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
    
 
+});
+
+Route::middleware(['customer_auth'])->group(function () {
+    Route::get('/order',[CustomerController::class,'create'])->name('order');
 });
 
 require __DIR__.'/auth.php';

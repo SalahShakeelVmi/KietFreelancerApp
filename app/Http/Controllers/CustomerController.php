@@ -14,14 +14,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $projectCategories = ProjectCategory::latest()->get();
-         return Inertia::render('Welcome', [
-            'projectCategories' => $projectCategories,
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+       return Inertia::render('Welcome');
     }
 
     /**
@@ -29,7 +22,14 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        //
+        $projectCategories = ProjectCategory::latest()->get();
+        return Inertia::render('Order', [
+           'projectCategories' => $projectCategories,
+           'canLogin' => Route::has('login'),
+           'canRegister' => Route::has('register'),
+           'laravelVersion' => Application::VERSION,
+           'phpVersion' => PHP_VERSION,
+       ]);
     }
 
     /**

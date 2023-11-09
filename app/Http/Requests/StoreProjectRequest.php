@@ -3,7 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-
+use Illuminate\Support\Facades\Auth;
 class StoreProjectRequest extends FormRequest
 {
     /**
@@ -19,6 +19,14 @@ class StoreProjectRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
+     protected function prepareForValidation()
+     {
+         $this->merge([
+             'customerid' => auth()->id(), // Set customerid to the authenticated user's ID
+         ]);
+     }
+
     public function rules(): array
     {
         return [
@@ -29,6 +37,7 @@ class StoreProjectRequest extends FormRequest
             'project_title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
             'delivery_datetime' => ['required'],
+            'customerid' =>['required'],
         ];
     }
 

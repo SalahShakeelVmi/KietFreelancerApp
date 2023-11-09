@@ -16,6 +16,10 @@ class Project extends Model
         return $this->belongsTo(ProjectCategory::class, 'projectcategoryid');
     }
 
+    public function customers(){
+        return $this->belongsTo(User::class, 'customerid');
+    }
+
     public function user(){
         return $this->belongsToMany(User::class,'project_users','user_id','project_id')->withTimestamps();
     }
@@ -31,5 +35,6 @@ class Project extends Model
         'delivery_datetime',
         'assign',
         'freelancer_status',
+        'customerid',
     ];
 }

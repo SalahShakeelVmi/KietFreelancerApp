@@ -193,6 +193,8 @@ const handleOpenModal = (project) => {
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
                             <th scope="col" class="px-4 py-3">Sr.No</th>
+                            <th scope="col" class="px-4 py-3">Customer Name</th>
+                            <th scope="col" class="px-4 py-3">Customer Email</th>
                             <th scope="col" class="px-4 py-3">Project Category</th>
                             <th scope="col" class="px-4 py-3">Project Title</th>
                             <th scope="col" class="px-4 py-3">Price</th>
@@ -211,6 +213,8 @@ const handleOpenModal = (project) => {
                        
                             <tr class="border-b dark:border-gray-700">
                                 <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{index + 1}</th>
+                                <td class="px-4 py-3">{project.customers.name}</td>
+                                <td class="px-4 py-3">{project.customers.email}</td>
                                 <td class="px-4 py-3">{project.projectcategory.category_name}</td>
                                 <td class="px-4 py-3">{project.project_title}</td>
                                 <td class="px-4 py-3">Rs.
