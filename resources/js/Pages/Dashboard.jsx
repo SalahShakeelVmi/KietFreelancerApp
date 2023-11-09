@@ -7,7 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import Modal from '@/Components/Modal';
 import { useState } from 'react';
 import RoundedHoverButton from '@/Components/RoundedHoverButton';
-export default function Dashboard({ auth,count_admin,count_freelancer,count_project,freelancer_assign_projects }) {
+export default function Dashboard({ auth,count_customer,count_freelancer,count_project,freelancer_assign_projects }) {
     const totalPrice = freelancer_assign_projects.reduce((accumulator, project) => {
         return accumulator + parseFloat(project.price)*50/100;
       }, 0);
@@ -107,9 +107,9 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                   <div class="max-w-sm p-6 w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                   <svg class="feather feather-users" fill="none" height="100" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="100" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                       <a href="#">
-                          <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Total Admin</h5>
+                          <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Total Customers</h5>
                       </a>
-                      <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{ count_admin }</p>
+                      <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{ count_customer }</p>
                      
                   </div>
                   
@@ -117,7 +117,7 @@ export default function Dashboard({ auth,count_admin,count_freelancer,count_proj
                   <div class="max-w-sm p-6 w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                   <svg class="feather feather-users" fill="none" height="100" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="100" xmlns="http://www.w3.org/2000/svg"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                       <a href="#">
-                          <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Total Freelancer</h5>
+                          <h5 class="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">Total Freelancers</h5>
                       </a>
                       <p class="mb-3 font-normal text-gray-500 dark:text-gray-400">{ count_freelancer }</p>
                      

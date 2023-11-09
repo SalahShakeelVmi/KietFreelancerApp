@@ -13,14 +13,14 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $count_admin = User::where('role','admin')->wherenot('email','admin@gmail.com')->count();
+        $count_customers = User::where('role','customer')->count();
         $count_freelancer = User::where('role','freelancer')->count();
         $count_project = Project::count();
 
         $get_freelancer_projects =auth()->user()->project()->with('projectcategory')->latest()->get();
      
         return Inertia::render('Dashboard', [
-            'count_admin' => $count_admin,
+            'count_customer' => $count_customers,
             'count_freelancer' => $count_freelancer,
             'count_project' => $count_project,
             'freelancer_assign_projects' => $get_freelancer_projects,
