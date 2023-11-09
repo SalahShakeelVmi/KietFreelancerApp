@@ -67,11 +67,13 @@ Route::middleware(['admin_auth'])->group(function () {
     Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
     Route::get('/project-users/users/projects/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
    
-    Route::resource('payments', PaymentController::class);
+    // Direct Route of payments
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
 });
 
 Route::middleware(['customer_auth'])->group(function () {
     Route::get('/order',[CustomerController::class,'create'])->name('order');
+    Route::get('/payments/create', [PaymentController::class, 'create'])->name('payments.create');
 });
 
 require __DIR__.'/auth.php';
