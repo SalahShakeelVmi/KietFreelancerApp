@@ -117,6 +117,12 @@ const handleOpenModal = (project) => {
                             
                                 <div class="flex justify-between mb-4 rounded-t sm:mb-5">
                                     <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                                    <h3 class="font-semibold ">
+                                         Customer Name: {readItem.customers.name}
+                                        </h3>
+                                        <h3 class="font-semibold ">
+                                         Customer Email: {readItem.customers.email}
+                                        </h3>
                                         <h3 class="font-semibold ">
                                          Project Title: {readItem.project_title}
                                         </h3>
@@ -169,7 +175,7 @@ const handleOpenModal = (project) => {
         
 
         <section class="p-3 sm:p-5">
-    <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
+    <div class="mx-auto">
     
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">

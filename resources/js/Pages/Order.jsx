@@ -24,8 +24,7 @@ const Order = ({ auth,projectCategories }) => {
       }, [flash.message,flash.error]);
 
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
-        email: '',
+     
         projectcategoryid: '',
         price: '',
         project_title: '',
@@ -116,19 +115,7 @@ const Order = ({ auth,projectCategories }) => {
                                            <div class="grid gap-4 sm:grid-cols-4 sm:gap-4">
                                                
 
-                                               <div class="sm:col-span-8">
-                                                   <InputLabel for="name" value="Full Name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" />
-                                                   <TextInput onChange={onHandleChange} name="name"  value={data.name} type="text" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type full name" required=""/>
-                                                   <InputError message={errors.name} className="mt-2" />
-                                               </div>
-
-                                               <div class="sm:col-span-8">
-
-                                               <InputLabel for="email" value="Email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" />
-                                                   <TextInput onChange={onHandleChange} name="email" value={data.email} type="email" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Type email" required=""/>
-                                                   <InputError message={errors.email} className="mt-2" />
-
-                                              </div>
+                                             
 
                                                <div class="sm:col-span-8">
                                                <InputLabel for="category" value="Category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" />
