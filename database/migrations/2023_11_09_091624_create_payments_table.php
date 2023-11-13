@@ -13,14 +13,12 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('card_number');
-            $table->string('exp_month');
-            $table->string('exp_year');
-            $table->string('cvc');
-            $table->string('token_no');
-            $table->decimal('amount');
-            $table->string('status');
+            $table->unsignedBigInteger('project_id');
+            $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
+            $table->string('invoice_id');
+            $table->string('token_no')->nullable();
+            $table->decimal('amount')->nullable();
+            $table->boolean('status')->default(0);
             $table->timestamps();
         });
     }

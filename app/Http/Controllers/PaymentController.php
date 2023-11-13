@@ -13,8 +13,13 @@ class PaymentController extends Controller
      */
     public function index()
     {
+        $payments = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->latest()->paginate(10);
+       
         return Inertia::render(
             'Payments/Index',
+            [
+                'payments' => $payments
+            ]
         );
     }
 
@@ -23,17 +28,20 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        return Inertia::render(
-            'Payments/Create',
-        );
+        return view('StripePayment.Create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(StorePaymentRequest $request)
-    {
-        //
+    { 
+        Payment::create([
+            'project_id' => $request->project['id'],
+            'invoice_id' => $request->invoice_id,
+            'amount' => $request->project['price'],
+        ]);
+        session()->flash('message', 'Payment link created successfully.');
     }
 
     /**

@@ -89,6 +89,13 @@ const handleOpenModal = (project) => {
           handleCloseModal();
       };
 
+      const sendPayment = (project) => {
+        router.post(route('payments.store'),{
+            project: project,
+            preserveState: true
+        })
+      }
+
   return (
     <Authenticated user={auth.user}>
         <Head title="Projects"/>
@@ -301,8 +308,10 @@ const handleOpenModal = (project) => {
                                     <Dropdown.Content>
                                         
                                         <Dropdown.Link onClick={(e)=>{e.preventDefault(); handleOpenReadModel(project) }}  >View</Dropdown.Link>
+                                        <Dropdown.Link onClick={(e) => { e.preventDefault(); sendPayment(project) } } >Send Payment Link</Dropdown.Link>
                                         <Dropdown.Link onClick={(e) => { e.preventDefault(); handleOpenModal(project) } } >Delete</Dropdown.Link>
-                                        
+
+
                                        
                                         
                                     </Dropdown.Content>

@@ -24,6 +24,10 @@ class Project extends Model
         return $this->belongsToMany(User::class,'project_users','user_id','project_id')->withTimestamps();
     }
 
+    public function payments(){
+        return $this->hasMany(Payment::class, 'project_id');
+    }
+
     protected $fillable = [
         'project_title',
         'description',
