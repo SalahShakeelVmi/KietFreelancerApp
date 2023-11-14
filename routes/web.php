@@ -12,7 +12,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\WorkSpaceController;
 use App\Http\Controllers\PaymentController;
-
+use App\Http\Controllers\NotificationController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -76,6 +76,8 @@ Route::middleware(['customer_auth'])->group(function () {
     Route::get('/order',[CustomerController::class,'create'])->name('order');
     Route::get('order/payments/create/{invoice_id}', [PaymentController::class, 'create'])->name('payments.create');
     Route::post('order/payments/update/{payment}',[PaymentController::class, 'update'])->name('payment.update');
+
+    Route::resource('notifications', NotificationController::class);
 });
 
 require __DIR__.'/auth.php';
