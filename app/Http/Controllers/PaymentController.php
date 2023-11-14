@@ -6,6 +6,8 @@ use App\Models\Payment;
 use App\Http\Requests\StorePaymentRequest;
 use App\Http\Requests\UpdatePaymentRequest;
 use Inertia\Inertia;
+use Session;
+use Stripe;
 class PaymentController extends Controller
 {
     /**
@@ -26,9 +28,12 @@ class PaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create($invoice_id)
     {
-        return view('StripePayment.Create');
+        $payment = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->where('invoice_id', $invoice_id)->first();
+        return view('StripePayment.Create',[
+            'payment' => $payment
+        ]);
     }
 
     /**
@@ -65,7 +70,30 @@ class PaymentController extends Controller
      */
     public function update(UpdatePaymentRequest $request, Payment $payment)
     {
-        //
+        if($payment->token_no === null){
+          
+            Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        
+            Stripe\Charge::create ([
+                    "amount" => 100 * 100,
+                    "currency" => "usd",
+                    "source" => $request->stripeToken,
+                    "description" => "Test payment from LaravelTus.com." 
+            ]);
+
+            $payment->update([
+                'token_no' => $request->stripeToken,
+                'status' => 1
+            ]);
+        
+            Session::flash('success', 'Payment successful!');
+                
+            return back();
+        }
+        else{
+            Session::flash('error', 'You have already paid for this project.');               
+            return back();
+        }
     }
 
     /**

@@ -13,26 +13,32 @@
 <body>
 <div class="container">
     
-    <h2 class="text-center">Laravel 9 Stripe Payment Gateway Integration Example - LaravelTuts.com</h2>
+    <h2 class="text-center">Kiet Freelancer Payment</h2>
     
     <div class="row">
-        <div class="col-md-7 col-md-offset-3">
+        <div class="col-md-6 col-md-offset-3">
             <div class="panel panel-default credit-card-box">
                 <div class="panel-heading display-table" >
-                    <h3 class="panel-title text-center"><strong>Payment Details</strong></h3>
+                    <h3 class="panel-title text-center"><strong>Payment Details Of Invoice# {{ $payment->invoice_id }}</strong></h3>
+
                 </div>
                 <div class="panel-body">
     
                     @if (Session::has('success'))
                         <div class="alert alert-success text-center">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>
                             <p>{{ Session::get('success') }}</p>
+                        </div>
+                    @elseif (Session::has('error'))
+                        <div class="alert alert-danger text-center">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>
+                            <p>{{ Session::get('error') }}</p>
                         </div>
                     @endif
     
                         <form 
                             role="form" 
-                            {{-- action="{{ route('stripe.post') }}"  --}}
+                            action="{{ route('payment.update', $payment->id) }}" 
                             method="post" 
                             class="require-validation"
                             data-cc-on-file="false"
@@ -76,7 +82,12 @@
     
                         <div class="row">
                             <div class="col-xs-12">
-                                <button class="btn btn-primary btn-lg btn-block" type="submit">Pay Now ($100)</button>
+                                <button class="btn btn-primary btn-lg btn-block" type="submit">Pay Now (Rs {{ $payment->amount }})</button>
+                            </div>
+                            <div class="col-xs-12" style="margin-top: 1%">
+                                <a href="{{ route('order') }}" class="btn btn-danger btn-lg btn-block">
+                                Back
+                                </a>
                             </div>
                         </div>
                             
