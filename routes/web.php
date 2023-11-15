@@ -73,7 +73,8 @@ Route::middleware(['admin_auth'])->group(function () {
 });
 
 Route::middleware(['customer_auth'])->group(function () {
-    Route::get('/order',[CustomerController::class,'create'])->name('order.index');
+    Route::get('order',[CustomerController::class,'create'])->name('order.index');
+    Route::get('payments/{payment}',[PaymentController::class,'show'])->name('payments.show');
     Route::get('order/payments/{payment}/edit', [PaymentController::class, 'edit'])->name('payments.edit');
     Route::post('order/payments/update/{payment}',[PaymentController::class, 'update'])->name('payment.update');
 

@@ -51,7 +51,13 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        //
+        $payment = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->where('id', $payment->id)->first();
+        return Inertia::render(
+            'Payments/Show',
+            [
+                'payment' => $payment
+            ]
+        );
     }
 
     /**
