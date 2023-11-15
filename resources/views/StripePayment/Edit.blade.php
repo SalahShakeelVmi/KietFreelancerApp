@@ -85,7 +85,7 @@
                                 <button class="btn btn-primary btn-lg btn-block" type="submit">Pay Now (Rs {{ $payment->amount }})</button>
                             </div>
                             <div class="col-xs-12" style="margin-top: 1%">
-                                <a href="{{ route('order') }}" class="btn btn-danger btn-lg btn-block">
+                                <a href="{{ route('notifications.index') }}" class="btn btn-danger btn-lg btn-block">
                                 Back
                                 </a>
                             </div>

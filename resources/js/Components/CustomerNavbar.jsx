@@ -22,7 +22,15 @@ const CustomerNavbar = ({auth}) => {
                 </Link>
               ) : (
                 <>
-                  <Link href={route('logout')} method="post" as="button">
+                  {route().current('notifications.index') ? (
+                <Link href={route('order.index')}>
+                <PrimaryButton>Order</PrimaryButton>
+              </Link>
+                  ):( <Link href={route('notifications.index')}>
+                  <PrimaryButton>
+                    Notifications ()</PrimaryButton>
+                </Link>)}
+                  <Link className='px-4' href={route('logout')} method="post" as="button">
                   <PrimaryButton>Logout</PrimaryButton>
                 </Link>
                 </>

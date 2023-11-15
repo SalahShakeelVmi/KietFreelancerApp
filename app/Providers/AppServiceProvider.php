@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-
+use App\Models\Payment;
 class AppServiceProvider extends ServiceProvider
 {
     /**

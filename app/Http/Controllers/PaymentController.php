@@ -28,12 +28,9 @@ class PaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create($invoice_id)
-    {
-        $payment = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->where('invoice_id', $invoice_id)->first();
-        return view('StripePayment.Create',[
-            'payment' => $payment
-        ]);
+    public function create()
+    {   
+        //
     }
 
     /**
@@ -62,7 +59,10 @@ class PaymentController extends Controller
      */
     public function edit(Payment $payment)
     {
-        //
+        $payment = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->where('id', $payment->id)->first();
+        return view('StripePayment.Edit',[
+            'payment' => $payment
+        ]);
     }
 
     /**
