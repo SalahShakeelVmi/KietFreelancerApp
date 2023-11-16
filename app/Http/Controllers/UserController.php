@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users =  User::wherenot('email','admin@gmail.com')->latest()->paginate(10);
+        $users =  User::wherenot('email','admin@kietfreelancerapp.com')->latest()->paginate(10);
         return Inertia::render('Users/Index', [
             'users' => $users
         ]);

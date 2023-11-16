@@ -13,6 +13,9 @@ use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\WorkSpaceController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\NotificationController;
+use Illuminate\Support\Facades\Hash;
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -81,5 +84,19 @@ Route::middleware(['customer_auth'])->group(function () {
 
     Route::resource('notifications', NotificationController::class);
 });
+
+// Route::get("default/admin",function(){
+//     $default_admin = User::create([
+//         'name' => 'Admin',
+//         'email' => 'admin@kietfreelancerapp.com',
+//         'password' => Hash::make('admin@kietfreelancerapp.com'),
+//     ]); 
+//     if($default_admin){
+//        return "default admin created";
+//     }
+//     else{
+//         return "already default admin created";
+//     }
+// });
 
 require __DIR__.'/auth.php';
