@@ -28,6 +28,7 @@
         "@stripe/stripe-js": "^2.1.11",
         "flowbite": "^1.8.1",
         "flowbite-react": "^0.6.4",
+        "html2canvas": "^1.4.1",
         "moment": "^2.29.4",
         "react-beautiful-dnd": "^13.1.1",
         "react-number-format": "^5.3.1",

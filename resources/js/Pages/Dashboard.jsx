@@ -7,7 +7,7 @@ import PrimaryButton from '@/Components/PrimaryButton';
 import Modal from '@/Components/Modal';
 import { useState } from 'react';
 import RoundedHoverButton from '@/Components/RoundedHoverButton';
-export default function Dashboard({ auth,count_customer,count_freelancer,count_project,freelancer_assign_projects }) {
+export default function Dashboard({ auth,count_customer,count_freelancer,count_project,freelancer_assign_projects,get_earned_amount }) {
     const totalPrice = freelancer_assign_projects.reduce((accumulator, project) => {
         return accumulator + parseFloat(project.price)*50/100;
       }, 0);
@@ -155,6 +155,20 @@ export default function Dashboard({ auth,count_customer,count_freelancer,count_p
                       <span class="dark:text-white">Rs.
                       <NumericFormat
   value={ totalPrice.toFixed(2)}
+  thousandsGroupStyle="lakh"
+  thousandSeparator=","
+  displayType="text"
+
+/>
+                      </span>
+                
+                  </h5>
+
+                  <h5>
+                      <span class="text-gray-500">Total Earned Amount:</span>
+                      <span class="dark:text-white">Rs.
+                      <NumericFormat
+  value={ get_earned_amount*50/100 }
   thousandsGroupStyle="lakh"
   thousandSeparator=","
   displayType="text"

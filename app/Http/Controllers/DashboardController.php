@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\User;
 use App\Models\Project;
+use App\Models\Payment;
 class DashboardController extends Controller
 {
     /**
@@ -18,12 +19,18 @@ class DashboardController extends Controller
         $count_project = Project::count();
 
         $get_freelancer_projects =auth()->user()->project()->with('projectcategory')->latest()->get();
+
+        $payments =auth()->user()->project()->with('payments')->get();
+        $totalEarnedAmount = $payments->flatMap(function ($project) {
+            return $project->payments->pluck('amount');
+        })->sum();
      
         return Inertia::render('Dashboard', [
             'count_customer' => $count_customers,
             'count_freelancer' => $count_freelancer,
             'count_project' => $count_project,
             'freelancer_assign_projects' => $get_freelancer_projects,
+            'get_earned_amount' => $totalEarnedAmount
         ]);
     }
 

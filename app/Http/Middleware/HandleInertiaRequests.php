@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 use Session;
-
+use App\Models\Payment;
 class HandleInertiaRequests extends Middleware
 {
     /**
@@ -44,6 +44,9 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'count_notification' =>fn()=>Payment::whereHas('projects', function ($query) {
+                $query->where('customerid', auth()->user()->id ?? 0);
+            })->where('status',0)->count()
         ];
     }
 }

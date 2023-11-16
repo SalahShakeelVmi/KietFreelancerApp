@@ -70,6 +70,7 @@ Route::middleware(['admin_auth'])->group(function () {
     // Direct Route of payments
     Route::get('/payments', [PaymentController::class, 'index'])->name('payments.index');
     Route::post('/payments-store', [PaymentController::class, 'store'])->name('payments.store');
+    Route::delete('/payments/destroy/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
 });
 
 Route::middleware(['customer_auth'])->group(function () {

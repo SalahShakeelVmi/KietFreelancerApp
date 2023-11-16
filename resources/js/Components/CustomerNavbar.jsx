@@ -1,11 +1,13 @@
 
 
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import React from 'react'
 import PrimaryButton from './PrimaryButton'
 
 
 const CustomerNavbar = ({auth}) => {
+  const { count_notification } = usePage().props
+ 
   return (
     <nav class="bg-white border-gray-200 dark:bg-gray-900">
   <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -28,7 +30,7 @@ const CustomerNavbar = ({auth}) => {
               </Link>
                   ):( <Link href={route('notifications.index')}>
                   <PrimaryButton>
-                    Notifications ()</PrimaryButton>
+                    Notifications ({count_notification ?? 0})</PrimaryButton>
                 </Link>)}
                   <Link className='px-4' href={route('logout')} method="post" as="button">
                   <PrimaryButton>Logout</PrimaryButton>
@@ -45,7 +47,7 @@ const CustomerNavbar = ({auth}) => {
                 </Link>
             <Link href={route('register')}>
 
-                <PrimaryButton>Register As Freelancer</PrimaryButton>
+                <PrimaryButton>Register</PrimaryButton>
     
                 </Link>
             </>

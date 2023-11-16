@@ -1,20 +1,102 @@
 
 
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout'
-import { Head,Link } from '@inertiajs/react'
-import React from 'react'
+import { Head,Link,router } from '@inertiajs/react'
+import React, { useState, useEffect } from 'react'
 import { NumericFormat } from 'react-number-format';
 import moment from 'moment';
+import Dropdown from '@/Components/Dropdown'
+import Modal from '@/Components/Modal';
+import DangerButton from '@/Components/DangerButton';
+import PrimaryButton from '@/Components/PrimaryButton';
+
 const Index = ({auth,payments}) => {
+    const [searchValue, setSearchValue] = useState('');
+    const [typingTimeout, setTypingTimeout] = useState(null);
+    const {dropdownOpen, setDropdownOpen} = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [itemToDelete, setItemToDelete] = useState(null);
+
+    const handleOpenModal = (project) => {
+        setItemToDelete(project);
+         setIsModalOpen(true);
+      };
+      
+      const handleCloseModal = () => {
+         setIsModalOpen(false);
+      };
+      
+       const handleDeleteProject = () => {  
+              router.delete(route('payments.destroy',itemToDelete),{
+                  preserveScroll: true
+              })   
+              handleCloseModal();
+          };
+    
+        
+
+    const toggleDropdown = () => {
+        setDropdownOpen((prevOpen) => !prevOpen);
+    };
+
+    const search =(value)=>{
+        setSearchValue(value);
+        router.visit(route('payments.index',{
+            searchFilter:"searchFilter",
+            search:value
+        }), {
+          preserveState: true,
+          replace: true
+        })
+      }
+
+      const handleSearchChange = (e) => {
+        const newValue = e.target.value;
+        setSearchValue(newValue);
+        // Clear any previous typing timeout
+        if (typingTimeout) {
+          clearTimeout(typingTimeout);
+        }
+        // Set a new timeout to trigger the search after 3 seconds of inactivity
+        setTypingTimeout(
+          setTimeout(() => {
+            search(newValue); // Call the search function after 3 seconds of inactivity
+          }, 1000)
+        );
+      };
+
+
+      const statusFilter = (value)=>{
+          router.visit(route('payments.index',{
+            statusFilter:"statusFilter",
+            status:value
+            }), {
+            preserveState: true,
+            replace: true
+          })
+      }
+
   return (
     <AuthenticatedLayout user={auth.user}>
         <Head title='Index'/>
+
+        <Modal show={isModalOpen} onClose={handleCloseModal}>
+                <div className="p-4">
+                    <h2>Confirmation</h2>
+                    <p>Are you sure you want to delete this payment?</p>
+                    <div className="space-x-4 mt-4">
+                        <DangerButton onClick={handleDeleteProject}>Confirm</DangerButton>
+                        <PrimaryButton onClick={handleCloseModal}>Close</PrimaryButton>
+                    </div>
+                </div>
+            </Modal>
    
 
         <section class="p-3 sm:p-5">
     <div class="mx-auto">
        
-        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg">
             <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                 <div class="w-full md:w-1/2">
                     <form class="flex items-center">
@@ -25,21 +107,21 @@ const Index = ({auth,payments}) => {
                                     <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                 </svg>
                             </div>
-                            <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required=""/>
+                            <input value={searchValue} onChange={handleSearchChange} type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required=""/>
                         </div>
                     </form>
                 </div>
                 <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                     
-                    <select className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'>
-                        <option>All</option>
-                        <option>Recived</option>
-                        <option>Not Recived</option>
+                    <select onChange={e=>statusFilter(e.target.value)} className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'>
+                        <option value={'all'}>All</option>
+                        <option value={1}>Received</option>
+                        <option value={0}>Not Recived</option>
                     </select>
                
                 </div>
             </div>
-            <div class="overflow-x-auto">
+          
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
@@ -113,24 +195,35 @@ const Index = ({auth,payments}) => {
                            
                             </td>
                            <td class="px-4 py-3 flex items-center justify-end">
-                               <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                   <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                       <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                   </svg>
-                               </button>
-                               <div id="apple-imac-27-dropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                   <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                       <li>
-                                           <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                       </li>
-                                       <li>
-                                           <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                       </li>
-                                   </ul>
-                                   <div class="py-1">
-                                       <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                   </div>
-                               </div>
+                           <Dropdown>
+                                    <Dropdown.Trigger>
+                                        <button
+                                            id="apple-imac-27-dropdown-button"                                            
+                                            className="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100"
+                                            type="button"
+                                            onClick={toggleDropdown}
+                                        >
+                                            <svg
+                                                className="w-5 h-5"
+                                                aria-hidden="true"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+                                            </svg>
+                                        </button>
+                                    </Dropdown.Trigger>
+                                    <Dropdown.Content>
+                                        
+                                 
+                                        <Dropdown.Link onClick={(e) =>{ e.preventDefault(); handleOpenModal(payment)}} >Delete</Dropdown.Link>
+
+
+                                       
+                                        
+                                    </Dropdown.Content>
+                                </Dropdown>
                            </td>
                      </tr>
                         ))}
@@ -138,7 +231,7 @@ const Index = ({auth,payments}) => {
                     
                     </tbody>
                 </table>
-            </div>
+            
             <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                 <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                   

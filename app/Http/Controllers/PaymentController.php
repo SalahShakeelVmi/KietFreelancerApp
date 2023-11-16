@@ -8,21 +8,70 @@ use App\Http\Requests\UpdatePaymentRequest;
 use Inertia\Inertia;
 use Session;
 use Stripe;
+use Illuminate\Http\Request;
 class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $payments = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->latest()->paginate(10);
+
+        if(isset($request->statusFilter)){
+            if($request->status === 'all'){
+                $payments = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->latest()->paginate(10);
+                return Inertia::render(
+                    'Payments/Index',
+                    [
+                        'payments' => $payments
+                    ]
+                );
+           
+            }
+            else{
+            $payments = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')
+            ->where('status',$request->status)->latest()->paginate(10);
        
-        return Inertia::render(
-            'Payments/Index',
-            [
-                'payments' => $payments
-            ]
-        );
+            return Inertia::render(
+                'Payments/Index',
+                [
+                    'payments' => $payments
+                ]
+            );
+         }
+        }
+        else if(isset($request->searchFilter)){
+            $search = $request->search;
+            $payments = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')
+            ->where('invoice_id', 'like', '%' . $search . '%')
+            ->orWhereHas('projects', function ($query) use ($search) { // Use the 'use' keyword to pass $search to the closure
+                $query->where('project_title', 'like', '%' . $search . '%');
+            })
+            ->orWhereHas('projects.customers', function ($query) use ($search) { // Use the 'use' keyword to pass $search to the closure
+                $query->where('name', 'like', '%' . $search . '%')->orwhere('email', 'like', '%' . $search . '%');
+            })
+            ->latest()->paginate(10);
+
+            return Inertia::render(
+                'Payments/Index',
+                [
+                    'payments' => $payments
+                ]
+                );
+
+        }
+        else{
+            $payments = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->latest()->paginate(10);
+       
+            return Inertia::render(
+                'Payments/Index',
+                [
+                    'payments' => $payments
+                ]
+            ); 
+        }
+
+       
     }
 
     /**
@@ -52,12 +101,18 @@ class PaymentController extends Controller
     public function show(Payment $payment)
     {
         $payment = Payment::with('projects')->with('projects.projectcategory')->with('projects.customers')->where('id', $payment->id)->first();
-        return Inertia::render(
-            'Payments/Show',
-            [
-                'payment' => $payment
-            ]
-        );
+        if($payment->status ){
+            return Inertia::render(
+                'Payments/Show',
+                [
+                    'payment' => $payment
+                ]
+            );
+        }
+        else{
+            return back();
+        }
+      
     }
 
     /**
@@ -107,6 +162,10 @@ class PaymentController extends Controller
      */
     public function destroy(Payment $payment)
     {
-        //
+        $payment->delete();
+        session()->flash('message', 'Payment deleted successfully.');
     }
+
+    
+
 }
