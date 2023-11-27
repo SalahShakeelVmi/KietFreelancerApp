@@ -13,12 +13,20 @@ class ProjectCategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projectCategories = ProjectCategory::paginate(10);
-        return Inertia::render('ProjectCategories/Index', [
-            'projectCategories' => $projectCategories,
-        ]);
+        if($request->search){
+            $projectCategories = ProjectCategory::where('category_name', 'like', '%' . $request->search . '%')->paginate(10);
+            return Inertia::render('ProjectCategories/Index', [
+                'projectCategories' => $projectCategories,
+            ]);
+        }else{
+            $projectCategories = ProjectCategory::paginate(10);
+            return Inertia::render('ProjectCategories/Index', [
+                'projectCategories' => $projectCategories,
+            ]);
+        }
+       
     }
 
     /**
@@ -77,10 +85,4 @@ class ProjectCategoryController extends Controller
         }
     }
 
-    public function search(Request $request){
-        $projectCategories = ProjectCategory::where('category_name', 'like', '%' . $request->search . '%')->paginate(10);
-        return Inertia::render('ProjectCategories/Index', [
-            'projectCategories' => $projectCategories,
-        ]);
-    }
 }

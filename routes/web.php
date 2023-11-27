@@ -50,7 +50,6 @@ Route::middleware(['admin_auth'])->group(function () {
 
     // Direct Route of users
     Route::put('/users/update-status/{user}', [UserController::class, 'updateStatus'])->name('users.update-status');
-    Route::get('/users/search',[UserController::class,"search"])->name('users.search');
     Route::get('/users/role-filter/{role}',[UserController::class,"roleFilter"])->name('users.role-filter');
 
     // Resource Route of projects categories
@@ -58,7 +57,6 @@ Route::middleware(['admin_auth'])->group(function () {
 
     // Direct Route of projects categories
     Route::post('/project-categories/update/{projectCategory}', [ProjectCategoryController::class, 'update'])->name('project-categories.update');
-    Route::get('/project-categories/search', [ProjectCategoryController::class, 'search'])->name('project-categories.search');
   
     // Direct Route of projects
     Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');
@@ -67,7 +65,6 @@ Route::middleware(['admin_auth'])->group(function () {
     Route::delete('/projects/destroy/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
     Route::get('/project-users', [ProjectUserController::class, 'index'])->name('project-users.index');
-    Route::get('/project-users/search', [ProjectUserController::class, 'search'])->name('project-users.search');
     Route::get('/project-users/users/projects/{user}', [ProjectUserController::class, 'create'])->name('project-users.create');
    
     // Direct Route of payments

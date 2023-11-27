@@ -15,12 +15,20 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users =  User::wherenot('email','admin@kietfreelancerapp.com')->latest()->paginate(10);
-        return Inertia::render('Users/Index', [
-            'users' => $users
-        ]);
+        if( $request->search ){
+            $users =  User::where('name','like','%'.$request->search.'%')->wherenot('email','admin@gmail.com')->latest()->paginate(10);
+            return Inertia::render('Users/Index', [
+                'users' => $users
+            ]);
+        }
+        else{
+            $users =  User::wherenot('email','admin@kietfreelancerapp.com')->latest()->paginate(10);
+            return Inertia::render('Users/Index', [
+                'users' => $users
+            ]);
+        }
     }
 
     public function roleFilter($role)
@@ -108,13 +116,6 @@ class UserController extends Controller
             'email' => $request->email,       
         ]);
         Session::flash('message', 'Admin updated successfully');
-    }
-
-    public function search(Request $request){
-        $users =  User::where('name','like','%'.$request->search.'%')->wherenot('email','admin@gmail.com')->latest()->paginate(10);
-        return Inertia::render('Users/Index', [
-            'users' => $users
-        ]);
     }
 
 

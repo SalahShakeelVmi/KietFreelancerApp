@@ -46,7 +46,7 @@ class ProjectController extends Controller
 
     public function search(Request $request){
         $search = $request->search;
-        $projects = Project::with('projectcategory')->where('project_title','like','%'.$search.'%')->latest()->paginate(10);
+        $projects = Project::with('projectcategory')->with('customers')->where('project_title','like','%'.$search.'%')->latest()->paginate(10);
         return Inertia::render('Projects/Index', [
             'projects' => $projects
         ]);

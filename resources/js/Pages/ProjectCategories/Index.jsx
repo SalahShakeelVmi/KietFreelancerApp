@@ -147,7 +147,7 @@ const onUpdate = (e) => {
 
 const search =(value)=>{
   setSearchValue(value);
-  router.visit(route('project-categories.search',{search:value}), {
+  router.visit(route('project-categories.index',{search:value}), {
     preserveState: true,
     replace: true
   })

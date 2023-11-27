@@ -14,21 +14,23 @@ class ProjectUserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('role', 'freelancer')->where('status', 1)->latest()->paginate(10);
-        return Inertia::render('AssignProjects/Index', [
-           'users' => $users
-        ]);
+        if( $request->search ){
+            $users = User::where('role', 'freelancer')->where('status', 1)->where('name','like','%'.$request->search.'%')->latest()->paginate(10);
+            return Inertia::render('AssignProjects/Index', [
+                'users' => $users
+            ]);
+        }
+        else{
+            $users = User::where('role', 'freelancer')->where('status', 1)->latest()->paginate(10);
+            return Inertia::render('AssignProjects/Index', [
+            'users' => $users
+            ]);
+        }
     }
 
-    public function search(Request $request)
-    {
-        $users = User::where('role', 'freelancer')->where('status', 1)->where('name','like','%'.$request->search.'%')->latest()->paginate(10);
-        return Inertia::render('AssignProjects/Index', [
-            'users' => $users
-        ]);
-    }
+   
 
     /**
      * Show the form for creating a new resource.

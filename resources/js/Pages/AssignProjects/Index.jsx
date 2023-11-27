@@ -12,7 +12,7 @@ const Index = ({auth,users}) => {
 
   const search =(value)=>{
     setSearchValue(value);
-    router.visit(route('project-users.search',{search:value}), {
+    router.visit(route('project-users.index',{search:value}), {
       preserveState: true,
       replace: true
     })

@@ -50,7 +50,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         if($user->role == 'customer'){
-            return redirect()->route('order');
+            return redirect()->route('order.index');
         }
 
         return redirect(RouteServiceProvider::HOME);
